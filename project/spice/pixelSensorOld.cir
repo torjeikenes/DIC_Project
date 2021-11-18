@@ -66,55 +66,19 @@ C1 VSTORE VSS 100f
 Rleak VSTORE VSS 100T
 
 * Switch to reset voltage on capacitor
-*BR1 VRESET VSTORE I=V(ERASE)*V(VRESET,VSTORE)/1k
-
-M13 VRESET ERASE VSTORE VSS NMOS w=0.5u l=0.5u
+BR1 VRESET VSTORE I=V(ERASE)*V(VRESET,VSTORE)/1k
 
 * Switch to expose pixel
-*BR2 VPG VSTORE I=V(EXPOSE)*V(VSTORE,VPG)/1k
+BR2 VPG VSTORE I=V(EXPOSE)*V(VSTORE,VPG)/1k
 
-M14 VPG EXPOSE VSTORE VSS NMOS w=0.5u l=0.5u
 * Model photocurrent
 Rphoto VPG VSS 1G
-
 .ENDS
 
-.SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS 
+.SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS
 
 * Model comparator
-* BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
+BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
 
-* COMPARATOR
-mp1 VP VP VDD VDD pmos w=0.5u l=0.5u m=2
-mp2 VO VP VDD VDD pmos w=0.5u l=0.5u m=2
-
-mn1 VO VRAMP VS VS nmos w=0.5u l=0.15u
-mn2 VP VSTORE VS VS nmos w=0.5u l=0.15u
-
-I3 0 VBN1 DC 10u
-
-mb1 VBN1 VBN1 VSS VSS nmos w=0.5u l=0.15u m=2
-mb2 VS VBN1 VSS VSS nmos w=0.5u l=0.15u m=2
-
-mp3 VO2 VO VDD VDD pmos w=0.5u l=0.15u m=5
-mn3 VO2 VBN1 VSS VSS nmos w=0.5u l=0.15u
-
-mpc4 VCMP_OUT VO2 VDD VDD pmos w=0.5u l=0.5u
-mnp4 VCMP_OUT VO2 VSS VSS nmos w=0.5u l=0.15u
-
-*M4 Nod1 VBN1 VSS VSS NMOS w=0.5u l=0.5u
-*M5 Ninv VBN1 VSS VSS NMOS w=0.5u l=0.5u
-
-*M6 Nod3 VSTORE Nod1 Nod1 NMOS w=0.5u l=0.15u 
-*M7 Nod4 VRAMP Nod1 Nod1 NMOS w=0.5u l=0.15u 
-
-*M8 VDD Nod3 Nod3 Nod3 PMOS w=0.5u l=0.5u m=2
-*M9 VDD Nod3 Nod4 Nod4 PMOS w=0.5u l=0.5u m=2
-
-*M10 VDD Nod4 Ninv Ninv PMOS w=0.5u l=0.15u m=5
-
-*INVERTER
-*M11 VDD Ninv VCMP_OUT VCMP_OUT PMOS w= 0.5u l=0.5u
-*M12 VCMP_OUT Ninv VSS VSS NMOS w=0.5u l=0.15u
 
 .ENDS
