@@ -64,44 +64,21 @@ C1 VG VSS 1p
 * Capacitor to model gate-source capacitance
 C1 VSTORE VSS 100f
 Rleak VSTORE VSS 100T
-*MS3 VSS VSTORE VSS VSS NMOS w=1.5u l=0.5u
 
 * Switch to reset voltage on capacitor
-*BR1 VRESET VSTORE I=V(ERASE)*V(VRESET,VSTORE)/1k
-
-MS1 VRESET ERASE VSTORE VSS NMOS w=0.5u l=0.2u
+BR1 VRESET VSTORE I=V(ERASE)*V(VRESET,VSTORE)/1k
 
 * Switch to expose pixel
-*BR2 VPG VSTORE I=V(EXPOSE)*V(VSTORE,VPG)/1k
+BR2 VPG VSTORE I=V(EXPOSE)*V(VSTORE,VPG)/1k
 
-MS2 VPG EXPOSE VSTORE VSS NMOS w=0.5u l=0.2u
 * Model photocurrent
 Rphoto VPG VSS 1G
-
 .ENDS
 
-.SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS 
+.SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS
 
 * Model comparator
-* BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
-
-* COMPARATOR
-MC1 VDD VP VP VDD pmos w=0.5u l=0.5u 
-MC2 VDD VP VO VDD pmos w=0.5u l=0.5u 
-
-
-MC3 VO VRAMP VS VSS nmos w=0.5u l=0.2u
-MC4 VP VSTORE VS VSS nmos w=0.5u l=0.2u
-
-
-MC5 VS VBN1 VSS VSS nmos w=0.5u l=0.2u 
-
-MC6 VDD VO VINV VDD pmos w=0.5u l=0.5u 
-MC7 VINV VBN1 VSS VSS nmos w=0.5u l=0.2u
-
-MC8 VDD VINV VCMP_OUT VDD pmos w=0.5u l=0.5u
-MC9 VCMP_OUT VINV VSS VSS nmos w=0.5u l=0.2u
-
+BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
 
 
 .ENDS
