@@ -8,6 +8,7 @@ module pixelState_tb;
    //------------------------------------------------------------
    logic clk =0;
    logic reset =0;
+   logic start =0;
    parameter integer clk_period = 500;
    parameter integer sim_end = clk_period*2400;
    always #clk_period clk=~clk;
@@ -22,8 +23,7 @@ module pixelState_tb;
 
 
    PIXEL_STATE #(.c_erase(5),.c_expose(255),.c_convert(255),.c_read(5))
-   stateMachine1(.clk(clk),.reset(reset),.erase(erase),.expose(expose),.read1(read1),
-       .read2(read2),.convert(convert));
+   stateMachine1(.*);
 
 
    //------------------------------------------------------------
@@ -39,8 +39,14 @@ module pixelState_tb;
         $dumpvars(0,pixelState_tb);
 
 
-        #20 reset = 1;
-        #20 reset = 0;
+        #2000 start = 1;
+        #500 start = 0;
+
+        #600000 start = 1;
+        #clk_period  start=0;
+
+        #300000 reset = 1;
+        #clk_period  reset=0;
 
         #sim_end
           $stop;

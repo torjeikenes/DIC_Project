@@ -4,54 +4,53 @@
 
 module PIXEL_ARRAY
     (
-        input logic VBN1,
-        input logic RAMP,
-        input logic RESET,
-        input logic ERASE,
-        input logic EXPOSE,
-        input logic READ1,
-        input logic READ2,
-        inout [7:0] DATA11,
-        inout [7:0] DATA12,
-        inout [7:0] DATA21,
-        inout [7:0] DATA22
+        input wire anaBias1,
+        input wire anaRamp,
+        input wire anaReset,
+        input wire erase,
+        input wire expose,
+        input wire read1,
+        input wire read2,
+
+        inout [7:0] pixData1,
+        inout [7:0] pixData2
     );
 
     
 //Four pixel instances with the same signals except for READ.
     PIXEL_SENSOR #(.dv_pixel(0.4)) px11(
-        .VBN1(VBN1), 
-        .RAMP(RAMP), 
-        .RESET(RESET), 
-        .ERASE(ERASE),
-        .EXPOSE(EXPOSE), 
-        .READ(READ1),
-        .DATA(DATA11));
+        .VBN1(anaBias1), 
+        .RAMP(anaRamp), 
+        .RESET(anaReset), 
+        .ERASE(erase),
+        .EXPOSE(expose), 
+        .READ(read1),
+        .DATA(pixData1));
 
     PIXEL_SENSOR #(.dv_pixel(0.5)) px12(
-        .VBN1(VBN1), 
-        .RAMP(RAMP), 
-        .RESET(RESET), 
-        .ERASE(ERASE),
-        .EXPOSE(EXPOSE), 
-        .READ(READ1),
-        .DATA(DATA12));
+        .VBN1(anaBias1), 
+        .RAMP(anaRamp), 
+        .RESET(anaReset), 
+        .ERASE(erase),
+        .EXPOSE(expose), 
+        .READ(read1),
+        .DATA(pixData2));
 
     PIXEL_SENSOR #(.dv_pixel(0.6)) px21(
-        .VBN1(VBN1), 
-        .RAMP(RAMP), 
-        .RESET(RESET), 
-        .ERASE(ERASE),
-        .EXPOSE(EXPOSE), 
-        .READ(READ2),
-        .DATA(DATA21));
+        .VBN1(anaBias1), 
+        .RAMP(anaRamp), 
+        .RESET(anaReset), 
+        .ERASE(erase),
+        .EXPOSE(expose), 
+        .READ(read2),
+        .DATA(pixData1));
 
     PIXEL_SENSOR  #(.dv_pixel(0.7)) px22(
-        .VBN1(VBN1), 
-        .RAMP(RAMP), 
-        .RESET(RESET), 
-        .ERASE(ERASE),
-        .EXPOSE(EXPOSE), 
-        .READ(READ2),
-        .DATA(DATA22));
+        .VBN1(anaBias1), 
+        .RAMP(anaRamp), 
+        .RESET(anaReset), 
+        .ERASE(erase),
+        .EXPOSE(expose), 
+        .READ(read2),
+        .DATA(pixData2));
 endmodule

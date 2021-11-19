@@ -24,5 +24,4 @@ ysfsm: synth
 synth:
 	yosys pixelSensorFsm.ys
 
-
 test: ps psfsm synth

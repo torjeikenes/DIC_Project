@@ -3,11 +3,12 @@
 module pixelTop_tb;
    logic clk =0;
    logic reset =0;
-   parameter integer clk_period = 500;
+   logic start =0;
+   parameter integer clk_period = 50;
    parameter integer sim_end = clk_period*2400;
    always #clk_period clk=~clk;
 
-   PIXEL_TOP pixeltop(.clk(clk), .reset(reset));
+   PIXEL_TOP pixeltop(.clk(clk), .reset(reset), .start(start));
 
    initial
      begin
@@ -17,6 +18,25 @@ module pixelTop_tb;
 
         $dumpfile("pixelTop_tb.vcd");
         $dumpvars(0,pixelTop_tb);
+
+        #2000 start = 1;
+
+        #clk_period  start=0;
+
+
+        #57000 reset = 1;
+        #200  reset = 0;
+
+        #1000 start = 1;
+        #clk_period  start=0;
+
+
+        #25000 reset = 1;
+        #clk_period  reset=0;
+
+
+
+        
 
         #sim_end
           $stop;

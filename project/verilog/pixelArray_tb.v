@@ -37,15 +37,11 @@ module pixelArray_tb;
    logic              expose;
    logic              read1;
    logic              read2;
-   tri[7:0]         pixData11; //  We need this to be a wire, because we're tristating it
-   tri[7:0]         pixData12; //  We need this to be a wire, because we're tristating it
-   tri[7:0]         pixData21; //  We need this to be a wire, because we're tristating it
-   tri[7:0]         pixData22; //  We need this to be a wire, because we're tristating it
+   tri[7:0]         pixData1; //  We need this to be a wire, because we're tristating it
+   tri[7:0]         pixData2; //  We need this to be a wire, because we're tristating it
 
    //Instanciate the pixel
-   PIXEL_ARRAY pa1(.VBN1(anaBias1), .RAMP(anaRamp), .RESET(anaReset), .ERASE(erase),
-                    .EXPOSE(expose), .READ1(read1), .READ2(read2), .DATA11(pixData11), 
-                    .DATA12(pixData12), .DATA21(pixData21), .DATA22(pixData22));
+   PIXEL_ARRAY pa1(.*);
 
    //------------------------------------------------------------
    // State Machine
@@ -177,11 +173,12 @@ module pixelArray_tb;
    // Again, no resemblence to real world, but we cheat.
    assign anaBias1 = expose ? clk : 0;
 
-   // If we're not reading the pixData, then we should drive the bus
-   assign pixData11 = read1 ? 8'bZ: data;
-   assign pixData12 = read1 ? 8'bZ: data;
-   assign pixData21 = read2 ? 8'bZ: data;
-   assign pixData22 = read2 ? 8'bZ: data;
+
+    assign read = read1 || read2;
+
+    assign pixData1 = read ? 8'bZ: data;
+    assign pixData2 = read ? 8'bZ: data;
+
 
    // When convert, then run a analog ramp (via anaRamp clock) and digtal ramp via
    // data bus.
@@ -213,12 +210,12 @@ module pixelArray_tb;
       end
       else begin
         if(read1) begin
-            pixelDataOut11 <= pixData11;
-            pixelDataOut12 <= pixData12;
+            pixelDataOut11 <= pixData1;
+            pixelDataOut12 <= pixData2;
           end
           else if(read2) begin
-            pixelDataOut21 <= pixData21;
-            pixelDataOut22 <= pixData22;
+            pixelDataOut21 <= pixData1;
+            pixelDataOut22 <= pixData2;
           end
 
       end

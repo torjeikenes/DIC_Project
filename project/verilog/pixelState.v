@@ -2,6 +2,7 @@
 
 module PIXEL_STATE
     (
+        input logic start,
         input logic clk,
         input logic reset,
         output logic erase,
@@ -75,13 +76,9 @@ module PIXEL_STATE
 
 
    // Control the state transitions.
-   //TODO: The counter should probably be an always_comb. Might be a good idea
-   //to also reset the counter from the state machine, i.e provide the count
-   //down value, and trigger on 0
-   always_ff @(posedge clk or posedge reset) begin
+   always_ff @(posedge clk or posedge reset or posedge start) begin
       if(reset) begin
          state = IDLE;
-         next_state = ERASE;
          counter  = 0;
          convert  = 0;
       end
@@ -89,34 +86,37 @@ module PIXEL_STATE
          case (state)
            ERASE: begin
               if(counter == c_erase) begin
-                 next_state <= EXPOSE;
-                 state <= IDLE;
+                state <= EXPOSE;
+                counter = 0;
               end
            end
            EXPOSE: begin
               if(counter == c_expose) begin
-                 next_state <= CONVERT;
-                 state <= IDLE;
+                state <= CONVERT;
+                counter = 0;
               end
            end
            CONVERT: begin
               if(counter == c_convert) begin
-                 next_state <= READ1;
-                 state <= IDLE;
+                state <= READ1;
+                counter = 0;
               end
            end
            READ1:
              if(counter == c_read) begin
-                state <= IDLE;
-                next_state <= READ2;
+                state <= READ2;
+                counter = 0;
              end
            READ2:
              if(counter == c_read) begin
                 state <= IDLE;
-                next_state <= ERASE;
+                counter = 0;
              end
            IDLE:
-             state <= next_state;
+             if(start) begin
+                state <= ERASE;
+                counter = 0;
+             end
          endcase // case (state)
          if(state == IDLE)
            counter = 0;

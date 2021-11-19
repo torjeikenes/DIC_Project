@@ -1,13 +1,17 @@
 `timescale 1 ns / 1 ps
 
-module GRAYCOUNTER(out, clk, reset, convert);
-    parameter WIDTH = 8;
-    output [WIDTH-1 : 0] out;
-    input clk, reset;
-    logic [WIDTH-1 : 0] out;
-    wire clk, reset;
-    logic [WIDTH-1 : 0] q;
-    input convert;
+module GRAYCOUNTER(
+    input wire clk, 
+    input wire reset,
+    input wire read1,
+    input wire read2,
+    input wire convert,
+    inout logic[7:0] pixData1,
+    inout logic[7:0] pixData2
+);
+
+    logic[7:0] data;
+    logic[7:0] q;
 
     always @(posedge clk or posedge reset) begin
         if (reset) begin
@@ -19,8 +23,17 @@ module GRAYCOUNTER(out, clk, reset, convert);
         else begin
             q <= 0;
         end
-        out <= {q[WIDTH-1], q[WIDTH-1:1] ^ q[WIDTH-2:0]};
-        //out <= q;
+        data <= {q[7], q[7:1] ^ q[6:0]};
     end
+
+
+    //If we're not reading the pixData, then we should drive the bus
+    assign read = read1 || read2;
+
+    assign pixData1 = read ? 8'bZ: data;
+    assign pixData2 = read ? 8'bZ: data;
+
+
+
 endmodule // graycounter
 
